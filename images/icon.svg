@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <rect width="128" height="128" rx="16" fill="#1e1e2e"/>
+  <!-- left branch line -->
+  <line x1="38" y1="20" x2="38" y2="108" stroke="#4FC1FF" stroke-width="6" stroke-linecap="round"/>
+  <!-- right branch line -->
+  <line x1="90" y1="44" x2="90" y2="108" stroke="#C586C0" stroke-width="6" stroke-linecap="round"/>
+  <!-- branch-off curve -->
+  <path d="M38 44 Q64 44 90 44" stroke="#73C991" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- top dot (left) -->
+  <circle cx="38" cy="20" r="8" fill="#4FC1FF"/>
+  <!-- branch point dot -->
+  <circle cx="38" cy="44" r="6" fill="#73C991"/>
+  <!-- branch start dot (right) -->
+  <circle cx="90" cy="44" r="8" fill="#C586C0"/>
+  <!-- bottom dots -->
+  <circle cx="38" cy="108" r="8" fill="#4FC1FF"/>
+  <circle cx="90" cy="108" r="8" fill="#C586C0"/>
+  <!-- diff tilde mark -->
+  <text x="64" y="84" text-anchor="middle" font-size="22" font-family="monospace" fill="#F48771" font-weight="bold">~</text>
+</svg>

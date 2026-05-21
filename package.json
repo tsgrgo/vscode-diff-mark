@@ -1,0 +1,172 @@
+{
+  "name": "diff-lens",
+  "displayName": "Diff Lens",
+  "description": "Git diff highlight lines against any branch. Gutter indicators for changed, added and deleted lines. Explorer badges, side panel with all diff files, and inline diff view.",
+  "version": "0.2.1",
+  "publisher": "volodymyr-kelbel",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#1e1e2e",
+    "theme": "dark"
+  },
+  "homepage": "https://github.com/volodymyr-kelbel/vscode-diff-lens",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/volodymyr-kelbel/vscode-diff-lens.git"
+  },
+  "bugs": {
+    "url": "https://github.com/volodymyr-kelbel/vscode-diff-lens/issues"
+  },
+  "keywords": [
+    "git",
+    "diff",
+    "branch",
+    "highlight",
+    "compare",
+    "git diff",
+    "branch diff",
+    "compare branches",
+    "diff highlight",
+    "highlight lines",
+    "git compare",
+    "line diff",
+    "gutter",
+    "gutter highlight",
+    "git changes",
+    "changed lines",
+    "diff viewer",
+    "branch comparison",
+    "git decorations",
+    "scm"
+  ],
+  "categories": ["SCM Providers", "Other"],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "diffLensContainer",
+          "title": "Diff Lens",
+          "icon": "$(git-compare)"
+        }
+      ]
+    },
+    "views": {
+      "diffLensContainer": [
+        {
+          "id": "diffLensPanel",
+          "name": "Changed Files",
+          "icon": "$(git-compare)",
+          "contextualTitle": "Diff Lens"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "diffLensPanel",
+        "contents": "No branch selected.\n[Select Branch to Compare](command:diffLens.selectBranch)"
+      }
+    ],
+    "commands": [
+      {
+        "command": "diffLens.selectBranch",
+        "title": "Diff Lens: Select Branch to Compare",
+        "icon": "$(git-branch)"
+      },
+      {
+        "command": "diffLens.stop",
+        "title": "Diff Lens: Stop Highlighting",
+        "icon": "$(circle-slash)"
+      },
+      {
+        "command": "diffLens.showDiff",
+        "title": "Diff Lens: Show Diff for Current File"
+      },
+      {
+        "command": "diffLens.refresh",
+        "title": "Diff Lens: Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "diffLens.openFileDiff",
+        "title": "Show Diff"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "diffLens.selectBranch",
+          "when": "view == diffLensPanel",
+          "group": "navigation@1"
+        },
+        {
+          "command": "diffLens.refresh",
+          "when": "view == diffLensPanel",
+          "group": "navigation@2"
+        },
+        {
+          "command": "diffLens.stop",
+          "when": "view == diffLensPanel",
+          "group": "navigation@3"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "id": "diffLens.modifiedForeground",
+        "description": "Color for files modified vs the compared branch",
+        "defaults": { "dark": "#4FC1FF", "light": "#0070C1", "highContrast": "#4FC1FF" }
+      },
+      {
+        "id": "diffLens.addedForeground",
+        "description": "Color for files added vs the compared branch",
+        "defaults": { "dark": "#C586C0", "light": "#8B008B", "highContrast": "#C586C0" }
+      },
+      {
+        "id": "diffLens.deletedForeground",
+        "description": "Color for files deleted vs the compared branch",
+        "defaults": { "dark": "#F48771", "light": "#B83232", "highContrast": "#F48771" }
+      },
+      {
+        "id": "diffLens.renamedForeground",
+        "description": "Color for files renamed vs the compared branch",
+        "defaults": { "dark": "#73C991", "light": "#1E7E34", "highContrast": "#73C991" }
+      }
+    ],
+    "configuration": {
+      "title": "Diff Lens",
+      "properties": {
+        "diffLens.addedColor": {
+          "type": "string",
+          "default": "rgba(40, 160, 40, 0.6)",
+          "description": "Color for added lines gutter indicator"
+        },
+        "diffLens.modifiedColor": {
+          "type": "string",
+          "default": "rgba(30, 140, 200, 0.6)",
+          "description": "Color for modified lines gutter indicator"
+        },
+        "diffLens.deletedColor": {
+          "type": "string",
+          "default": "rgba(200, 50, 50, 0.6)",
+          "description": "Color for deleted lines gutter indicator"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}

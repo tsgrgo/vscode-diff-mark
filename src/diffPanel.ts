@@ -16,18 +16,18 @@ export class DiffFileItem extends vscode.TreeItem {
         this.contextValue = 'diffFile';
 
         if (file.status === 'added') {
-            this.iconPath = new vscode.ThemeIcon('diff-added', new vscode.ThemeColor('diffLens.addedForeground'));
+            this.iconPath = new vscode.ThemeIcon('diff-added', new vscode.ThemeColor('diffMark.addedForeground'));
         } else if (file.status === 'deleted') {
-            this.iconPath = new vscode.ThemeIcon('diff-removed', new vscode.ThemeColor('diffLens.deletedForeground'));
+            this.iconPath = new vscode.ThemeIcon('diff-removed', new vscode.ThemeColor('diffMark.deletedForeground'));
         } else if (file.status === 'renamed') {
-            this.iconPath = new vscode.ThemeIcon('diff-renamed', new vscode.ThemeColor('diffLens.renamedForeground'));
+            this.iconPath = new vscode.ThemeIcon('diff-renamed', new vscode.ThemeColor('diffMark.renamedForeground'));
         } else {
-            this.iconPath = new vscode.ThemeIcon('diff-modified', new vscode.ThemeColor('diffLens.modifiedForeground'));
+            this.iconPath = new vscode.ThemeIcon('diff-modified', new vscode.ThemeColor('diffMark.modifiedForeground'));
         }
 
         if (file.status !== 'deleted') {
             this.command = {
-                command: 'diffLens.openFileDiff',
+                command: 'diffMark.openFileDiff',
                 title: 'Show Diff',
                 arguments: [file, branch]
             };
@@ -121,10 +121,10 @@ export async function openFileDiff(file: ChangedFile, branch: string): Promise<v
     }
 
     const branchUri = vscode.Uri.parse(
-        `diff-lens:${file.relativePath}?branch=${encodeURIComponent(branch)}&ts=${Date.now()}`
+        `diff-mark:${file.relativePath}?branch=${encodeURIComponent(branch)}&ts=${Date.now()}`
     );
 
-    const registration = vscode.workspace.registerTextDocumentContentProvider('diff-lens', {
+    const registration = vscode.workspace.registerTextDocumentContentProvider('diff-mark', {
         provideTextDocumentContent: () => content
     });
 

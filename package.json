@@ -1,22 +1,22 @@
 {
-  "name": "diff-lens",
-  "displayName": "Diff Lens",
+  "name": "diff-mark",
+  "displayName": "Diff Mark",
   "description": "Git diff highlight lines against any branch. Gutter indicators for changed, added and deleted lines. Explorer badges, side panel with all diff files, and inline diff view.",
   "version": "0.2.1",
-  "publisher": "VolodymyrK",
+  "publisher": "vovabcps",
   "license": "MIT",
   "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#1e1e2e",
     "theme": "dark"
   },
-  "homepage": "https://github.com/vovabcps/vscode-diff-lens",
+  "homepage": "https://github.com/vovabcps/vscode-diff-mark",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vovabcps/vscode-diff-lens.git"
+    "url": "https://github.com/vovabcps/vscode-diff-mark.git"
   },
   "bugs": {
-    "url": "https://github.com/vovabcps/vscode-diff-lens/issues"
+    "url": "https://github.com/vovabcps/vscode-diff-mark/issues"
   },
   "keywords": [
     "git",
@@ -50,108 +50,108 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "diffLensContainer",
-          "title": "Diff Lens",
+          "id": "diffMarkContainer",
+          "title": "Diff Mark",
           "icon": "$(git-compare)"
         }
       ]
     },
     "views": {
-      "diffLensContainer": [
+      "diffMarkContainer": [
         {
-          "id": "diffLensPanel",
+          "id": "diffMarkPanel",
           "name": "Changed Files",
           "icon": "$(git-compare)",
-          "contextualTitle": "Diff Lens"
+          "contextualTitle": "Diff Mark"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "diffLensPanel",
-        "contents": "No branch selected.\n[Select Branch to Compare](command:diffLens.selectBranch)"
+        "view": "diffMarkPanel",
+        "contents": "No branch selected.\n[Select Branch to Compare](command:diffMark.selectBranch)"
       }
     ],
     "commands": [
       {
-        "command": "diffLens.selectBranch",
-        "title": "Diff Lens: Select Branch to Compare",
+        "command": "diffMark.selectBranch",
+        "title": "Diff Mark: Select Branch to Compare",
         "icon": "$(git-branch)"
       },
       {
-        "command": "diffLens.stop",
-        "title": "Diff Lens: Stop Highlighting",
+        "command": "diffMark.stop",
+        "title": "Diff Mark: Stop Highlighting",
         "icon": "$(circle-slash)"
       },
       {
-        "command": "diffLens.showDiff",
-        "title": "Diff Lens: Show Diff for Current File"
+        "command": "diffMark.showDiff",
+        "title": "Diff Mark: Show Diff for Current File"
       },
       {
-        "command": "diffLens.refresh",
-        "title": "Diff Lens: Refresh",
+        "command": "diffMark.refresh",
+        "title": "Diff Mark: Refresh",
         "icon": "$(refresh)"
       },
       {
-        "command": "diffLens.openFileDiff",
+        "command": "diffMark.openFileDiff",
         "title": "Show Diff"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "diffLens.selectBranch",
-          "when": "view == diffLensPanel",
+          "command": "diffMark.selectBranch",
+          "when": "view == diffMarkPanel",
           "group": "navigation@1"
         },
         {
-          "command": "diffLens.refresh",
-          "when": "view == diffLensPanel",
+          "command": "diffMark.refresh",
+          "when": "view == diffMarkPanel",
           "group": "navigation@2"
         },
         {
-          "command": "diffLens.stop",
-          "when": "view == diffLensPanel",
+          "command": "diffMark.stop",
+          "when": "view == diffMarkPanel",
           "group": "navigation@3"
         }
       ]
     },
     "colors": [
       {
-        "id": "diffLens.modifiedForeground",
+        "id": "diffMark.modifiedForeground",
         "description": "Color for files modified vs the compared branch",
         "defaults": { "dark": "#4FC1FF", "light": "#0070C1", "highContrast": "#4FC1FF" }
       },
       {
-        "id": "diffLens.addedForeground",
+        "id": "diffMark.addedForeground",
         "description": "Color for files added vs the compared branch",
         "defaults": { "dark": "#C586C0", "light": "#8B008B", "highContrast": "#C586C0" }
       },
       {
-        "id": "diffLens.deletedForeground",
+        "id": "diffMark.deletedForeground",
         "description": "Color for files deleted vs the compared branch",
         "defaults": { "dark": "#F48771", "light": "#B83232", "highContrast": "#F48771" }
       },
       {
-        "id": "diffLens.renamedForeground",
+        "id": "diffMark.renamedForeground",
         "description": "Color for files renamed vs the compared branch",
         "defaults": { "dark": "#73C991", "light": "#1E7E34", "highContrast": "#73C991" }
       }
     ],
     "configuration": {
-      "title": "Diff Lens",
+      "title": "Diff Mark",
       "properties": {
-        "diffLens.addedColor": {
+        "diffMark.addedColor": {
           "type": "string",
           "default": "rgba(40, 160, 40, 0.6)",
           "description": "Color for added lines gutter indicator"
         },
-        "diffLens.modifiedColor": {
+        "diffMark.modifiedColor": {
           "type": "string",
           "default": "rgba(30, 140, 200, 0.6)",
           "description": "Color for modified lines gutter indicator"
         },
-        "diffLens.deletedColor": {
+        "diffMark.deletedColor": {
           "type": "string",
           "default": "rgba(200, 50, 50, 0.6)",
           "description": "Color for deleted lines gutter indicator"

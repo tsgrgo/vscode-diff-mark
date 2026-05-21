@@ -19,19 +19,19 @@ export function activate(context: vscode.ExtensionContext) {
         panelProvider,
         fileDecorator,
         vscode.window.registerFileDecorationProvider(fileDecorator),
-        vscode.window.registerTreeDataProvider('diffLensPanel', panelProvider)
+        vscode.window.registerTreeDataProvider('diffMarkPanel', panelProvider)
     );
 
     statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-    statusBarItem.command = 'diffLens.selectBranch';
+    statusBarItem.command = 'diffMark.selectBranch';
     context.subscriptions.push(statusBarItem);
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('diffLens.selectBranch', selectBranch),
-        vscode.commands.registerCommand('diffLens.stop', stopHighlighting),
-        vscode.commands.registerCommand('diffLens.showDiff', showDiffForCurrentFile),
-        vscode.commands.registerCommand('diffLens.openFileDiff', openFileDiff),
-        vscode.commands.registerCommand('diffLens.refresh', refreshAll)
+        vscode.commands.registerCommand('diffMark.selectBranch', selectBranch),
+        vscode.commands.registerCommand('diffMark.stop', stopHighlighting),
+        vscode.commands.registerCommand('diffMark.showDiff', showDiffForCurrentFile),
+        vscode.commands.registerCommand('diffMark.openFileDiff', openFileDiff),
+        vscode.commands.registerCommand('diffMark.refresh', refreshAll)
     );
 
     context.subscriptions.push(
@@ -110,8 +110,8 @@ async function activateBranch(branch: string): Promise<void> {
     const files = await getChangedFiles(branch);
     diffState.setBranch(branch, files);
 
-    statusBarItem.text = `$(git-compare) Diff Lens: ${branch}`;
-    statusBarItem.tooltip = `Diff Lens: comparing against ${branch}. Click to change branch.`;
+    statusBarItem.text = `$(git-compare) Diff Mark: ${branch}`;
+    statusBarItem.tooltip = `Diff Mark: comparing against ${branch}. Click to change branch.`;
     statusBarItem.show();
 
     const editor = vscode.window.activeTextEditor;
@@ -119,7 +119,7 @@ async function activateBranch(branch: string): Promise<void> {
         await applyDecorations(editor, branch);
     }
 
-    await vscode.commands.executeCommand('diffLensPanel.focus');
+    await vscode.commands.executeCommand('diffMarkPanel.focus');
 }
 
 async function refreshAll(): Promise<void> {
@@ -148,7 +148,7 @@ async function showDiffForCurrentFile(): Promise<void> {
 
     const branch = diffState.branch;
     if (!branch) {
-        vscode.window.showInformationMessage('No branch selected. Use "Diff Lens: Select Branch to Compare" first.');
+        vscode.window.showInformationMessage('No branch selected. Use "Diff Mark: Select Branch to Compare" first.');
         return;
     }
 
@@ -167,10 +167,10 @@ async function showDiffForCurrentFile(): Promise<void> {
 
     const relativePath = path.relative(workspaceRoot, filePath);
     const branchUri = vscode.Uri.parse(
-        `diff-lens:${relativePath}?branch=${encodeURIComponent(branch)}&ts=${Date.now()}`
+        `diff-mark:${relativePath}?branch=${encodeURIComponent(branch)}&ts=${Date.now()}`
     );
 
-    const registration = vscode.workspace.registerTextDocumentContentProvider('diff-lens', {
+    const registration = vscode.workspace.registerTextDocumentContentProvider('diff-mark', {
         provideTextDocumentContent: () => content
     });
 

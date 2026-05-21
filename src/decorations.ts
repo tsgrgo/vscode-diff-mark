@@ -6,7 +6,7 @@ let modifiedDecorationType: vscode.TextEditorDecorationType;
 let deletedDecorationType: vscode.TextEditorDecorationType;
 
 export function createDecorationTypes(): void {
-    const config = vscode.workspace.getConfiguration('diffLens');
+    const config = vscode.workspace.getConfiguration('diffMark');
 
     addedDecorationType = vscode.window.createTextEditorDecorationType({
         gutterIconSize: '100%',
@@ -58,7 +58,7 @@ export async function applyDecorations(editor: vscode.TextEditor, branch: string
     const deletedRanges: vscode.DecorationOptions[] = [];
 
     const hoverMessage = new vscode.MarkdownString(
-        `[Show diff against ${branch}](command:diffLens.showDiff)`
+        `[Show diff against ${branch}](command:diffMark.showDiff)`
     );
     hoverMessage.isTrusted = true;
 

@@ -1,11 +1,11 @@
-# Diff Lens
+# Diff Mark
 
 Compare your working tree against any git branch with gutter highlights, Explorer badges, and a dedicated side panel — without interfering with VS Code's built-in uncommitted-changes indicators.
 
 ## Features
 
 ### Branch selection
-Open the **Diff Lens** panel in the Activity Bar (or run `Diff Lens: Select Branch to Compare` from the Command Palette) to pick any local or remote branch. The comparison stays active across all open files until you stop it.
+Open the **Diff Mark** panel in the Activity Bar (or run `Diff Mark: Select Branch to Compare` from the Command Palette) to pick any local or remote branch. The comparison stays active across all open files until you stop it.
 
 ### Gutter highlights
 Changed lines are marked in the editor gutter with colored left-border indicators:
@@ -18,10 +18,10 @@ Changed lines are marked in the editor gutter with colored left-border indicator
 
 Uncommitted HEAD changes always take visual priority — branch-diff highlights are suppressed on any line already highlighted by VS Code's built-in diff.
 
-Hover over any highlighted line for a clickable **Show diff** link, or run `Diff Lens: Show Diff for Current File` from the Command Palette.
+Hover over any highlighted line for a clickable **Show diff** link, or run `Diff Mark: Show Diff for Current File` from the Command Palette.
 
 ### Side panel
-The **Diff Lens** Activity Bar view lists every changed file, grouped by status:
+The **Diff Mark** Activity Bar view lists every changed file, grouped by status:
 
 - **Modified** — files changed between the branch and working tree
 - **Added** — files new in the working tree (not present on the branch)
@@ -43,18 +43,18 @@ Files in the Explorer are decorated with distinct badges and colors that differ 
 
 | Command | Description |
 |---------|-------------|
-| `Diff Lens: Select Branch to Compare` | Pick a branch and activate highlighting |
-| `Diff Lens: Stop Highlighting` | Clear all highlights and decorations |
-| `Diff Lens: Show Diff for Current File` | Open side-by-side diff for the active editor |
-| `Diff Lens: Refresh` | Re-fetch the changed file list |
+| `Diff Mark: Select Branch to Compare` | Pick a branch and activate highlighting |
+| `Diff Mark: Stop Highlighting` | Clear all highlights and decorations |
+| `Diff Mark: Show Diff for Current File` | Open side-by-side diff for the active editor |
+| `Diff Mark: Refresh` | Re-fetch the changed file list |
 
 ## Settings
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `diffLens.addedColor` | `rgba(40,160,40,0.6)` | Gutter color for added lines |
-| `diffLens.modifiedColor` | `rgba(30,140,200,0.6)` | Gutter color for modified lines |
-| `diffLens.deletedColor` | `rgba(200,50,50,0.6)` | Gutter color for deleted lines |
+| `diffMark.addedColor` | `rgba(40,160,40,0.6)` | Gutter color for added lines |
+| `diffMark.modifiedColor` | `rgba(30,140,200,0.6)` | Gutter color for modified lines |
+| `diffMark.deletedColor` | `rgba(200,50,50,0.6)` | Gutter color for deleted lines |
 
 ## Theme color overrides
 
@@ -62,10 +62,10 @@ All four Explorer decoration colors can be customized in your `settings.json`:
 
 ```json
 "workbench.colorCustomizations": {
-  "diffLens.modifiedForeground": "#4FC1FF",
-  "diffLens.addedForeground": "#C586C0",
-  "diffLens.deletedForeground": "#F48771",
-  "diffLens.renamedForeground": "#73C991"
+  "diffMark.modifiedForeground": "#4FC1FF",
+  "diffMark.addedForeground": "#C586C0",
+  "diffMark.deletedForeground": "#F48771",
+  "diffMark.renamedForeground": "#73C991"
 }
 ```
 

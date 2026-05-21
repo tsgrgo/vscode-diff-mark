@@ -3,7 +3,7 @@
   "displayName": "Diff Mark",
   "description": "Git diff highlight lines against any branch. Gutter indicators for changed, added and deleted lines. Explorer badges, side panel with all diff files, and inline diff view.",
   "version": "0.2.1",
-  "publisher": "vovabcps",
+  "publisher": "VolodymyrK",
   "license": "MIT",
   "icon": "images/icon.png",
   "galleryBanner": {

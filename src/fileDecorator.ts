@@ -38,25 +38,29 @@ export class BranchDiffFileDecorator implements vscode.FileDecorationProvider, v
                 return {
                     badge: '◆',
                     color: new vscode.ThemeColor('diffMark.addedForeground'),
-                    tooltip: `Diff Mark: new file vs ${b}`
+                    tooltip: `Diff Mark: new file vs ${b}`,
+                    propagate: true
                 };
             case 'deleted':
                 return {
                     badge: '✕',
                     color: new vscode.ThemeColor('diffMark.deletedForeground'),
-                    tooltip: `Diff Mark: deleted vs ${b}`
+                    tooltip: `Diff Mark: deleted vs ${b}`,
+                    propagate: true
                 };
             case 'renamed':
                 return {
                     badge: '»',
                     color: new vscode.ThemeColor('diffMark.renamedForeground'),
-                    tooltip: `Diff Mark: renamed vs ${b}`
+                    tooltip: `Diff Mark: renamed vs ${b}`,
+                    propagate: true
                 };
             case 'modified':
                 return {
                     badge: '~',
                     color: new vscode.ThemeColor('diffMark.modifiedForeground'),
-                    tooltip: `Diff Mark: modified vs ${b}`
+                    tooltip: `Diff Mark: modified vs ${b}`,
+                    propagate: true
                 };
         }
     }

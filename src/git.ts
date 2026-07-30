@@ -10,17 +10,44 @@ function getWorkspaceRoot(): string | undefined {
     return vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 }
 
+async function getRepositoryRoot(): Promise<string | undefined> {
+    const workspaceRoot = getWorkspaceRoot();
+    if (!workspaceRoot) {
+        return undefined;
+    }
+
+    try {
+        const { stdout } = await execFileAsync('git', ['rev-parse', '--show-toplevel'], { cwd: workspaceRoot });
+        return path.resolve(stdout.trim());
+    } catch {
+        return undefined;
+    }
+}
+
+function getRepositoryRelativePath(repositoryRoot: string, filePath: string): string | undefined {
+    const relativePath = path.relative(repositoryRoot, path.resolve(filePath));
+    if (relativePath === '..' || relativePath.startsWith(`..${path.sep}`) || path.isAbsolute(relativePath)) {
+        return undefined;
+    }
+
+    // Git revision paths always use forward slashes, including on Windows.
+    return relativePath.split(path.sep).join('/');
+}
+
 export async function getBranches(): Promise<string[]> {
-    const cwd = getWorkspaceRoot();
+    const cwd = await getRepositoryRoot();
     if (!cwd) {
         return [];
     }
     const { stdout } = await execFileAsync('git', ['branch', '-a', '--format=%(refname:short)'], { cwd });
-    return stdout.trim().split('\n').filter(b => b.length > 0);
+    return stdout
+        .trim()
+        .split('\n')
+        .filter(b => b.length > 0);
 }
 
 export async function getCurrentBranch(): Promise<string | undefined> {
-    const cwd = getWorkspaceRoot();
+    const cwd = await getRepositoryRoot();
     if (!cwd) {
         return undefined;
     }
@@ -39,17 +66,21 @@ export interface DiffHunk {
 }
 
 export async function getFileDiff(filePath: string, branch: string): Promise<DiffHunk[]> {
-    const cwd = getWorkspaceRoot();
+    const cwd = await getRepositoryRoot();
     if (!cwd) {
         return [];
     }
 
+    const relativePath = getRepositoryRelativePath(cwd, filePath);
+    if (relativePath === undefined) {
+        return [];
+    }
+
     try {
-        const { stdout } = await execFileAsync(
-            'git',
-            ['diff', '--unified=0', branch, '--', filePath],
-            { cwd, maxBuffer: 10 * 1024 * 1024 }
-        );
+        const { stdout } = await execFileAsync('git', ['diff', '--unified=0', branch, '--', relativePath], {
+            cwd,
+            maxBuffer: 10 * 1024 * 1024
+        });
         return parseDiffOutput(stdout);
     } catch {
         return [];
@@ -57,19 +88,21 @@ export async function getFileDiff(filePath: string, branch: string): Promise<Dif
 }
 
 export async function getFileContentAtBranch(filePath: string, branch: string): Promise<string | undefined> {
-    const cwd = getWorkspaceRoot();
+    const cwd = await getRepositoryRoot();
     if (!cwd) {
         return undefined;
     }
 
-    const relativePath = path.relative(cwd, filePath);
+    const relativePath = getRepositoryRelativePath(cwd, filePath);
+    if (relativePath === undefined) {
+        return undefined;
+    }
 
     try {
-        const { stdout } = await execFileAsync(
-            'git',
-            ['show', `${branch}:${relativePath}`],
-            { cwd, maxBuffer: 10 * 1024 * 1024 }
-        );
+        const { stdout } = await execFileAsync('git', ['show', `${branch}:${relativePath}`], {
+            cwd,
+            maxBuffer: 10 * 1024 * 1024
+        });
         return stdout;
     } catch {
         return undefined;
@@ -104,17 +137,16 @@ function parseDiffOutput(diffOutput: string): DiffHunk[] {
 }
 
 export async function getChangedFiles(branch: string): Promise<ChangedFile[]> {
-    const cwd = getWorkspaceRoot();
+    const cwd = await getRepositoryRoot();
     if (!cwd) {
         return [];
     }
 
     try {
-        const { stdout } = await execFileAsync(
-            'git',
-            ['diff', '--name-status', branch],
-            { cwd, maxBuffer: 10 * 1024 * 1024 }
-        );
+        const { stdout } = await execFileAsync('git', ['diff', '--name-status', branch], {
+            cwd,
+            maxBuffer: 10 * 1024 * 1024
+        });
 
         const files: ChangedFile[] = [];
         for (const line of stdout.trim().split('\n')) {
@@ -146,17 +178,21 @@ export async function getChangedFiles(branch: string): Promise<ChangedFile[]> {
 }
 
 export async function getUncommittedChanges(filePath: string): Promise<Set<number>> {
-    const cwd = getWorkspaceRoot();
+    const cwd = await getRepositoryRoot();
     if (!cwd) {
         return new Set();
     }
 
+    const relativePath = getRepositoryRelativePath(cwd, filePath);
+    if (relativePath === undefined) {
+        return new Set();
+    }
+
     try {
-        const { stdout } = await execFileAsync(
-            'git',
-            ['diff', '--unified=0', 'HEAD', '--', filePath],
-            { cwd, maxBuffer: 10 * 1024 * 1024 }
-        );
+        const { stdout } = await execFileAsync('git', ['diff', '--unified=0', 'HEAD', '--', relativePath], {
+            cwd,
+            maxBuffer: 10 * 1024 * 1024
+        });
         const hunks = parseDiffOutput(stdout);
         const lines = new Set<number>();
         for (const hunk of hunks) {

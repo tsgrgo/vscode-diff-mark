@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { diffState, ChangedFile } from './state';
 
 export class BranchDiffFileDecorator implements vscode.FileDecorationProvider, vscode.Disposable {
@@ -12,14 +13,21 @@ export class BranchDiffFileDecorator implements vscode.FileDecorationProvider, v
         this._stateListener = diffState.onDidChange(() => {
             this._fileMap.clear();
             for (const f of diffState.files) {
-                this._fileMap.set(f.absolutePath, f);
+                const fileKey = this.normalizePath(f.absolutePath);
+                this._fileMap.set(fileKey, f);
             }
             this._onDidChangeFileDecorations.fire(undefined);
         });
     }
 
     provideFileDecoration(uri: vscode.Uri): vscode.FileDecoration | undefined {
-        const file = this._fileMap.get(uri.fsPath);
+        if (uri.scheme !== 'file') {
+            return undefined;
+        }
+
+        const fileKey = this.normalizePath(uri.fsPath);
+        const file = this._fileMap.get(fileKey);
+
         if (!file) {
             return undefined;
         }
@@ -51,6 +59,11 @@ export class BranchDiffFileDecorator implements vscode.FileDecorationProvider, v
                     tooltip: `Diff Mark: modified vs ${b}`
                 };
         }
+    }
+
+    private normalizePath(filePath: string): string {
+        const normalized = path.normalize(path.resolve(filePath));
+        return process.platform === 'win32' ? normalized.toLowerCase() : normalized;
     }
 
     dispose(): void {

@@ -37,7 +37,10 @@ export class DiffFileItem extends vscode.TreeItem {
 }
 
 class SectionItem extends vscode.TreeItem {
-    constructor(label: string, public readonly children: DiffFileItem[]) {
+    constructor(
+        label: string,
+        public readonly children: DiffFileItem[]
+    ) {
         super(label, vscode.TreeItemCollapsibleState.Expanded);
         this.contextValue = 'section';
         const count = children.length;
@@ -76,12 +79,11 @@ export class DiffPanelProvider implements vscode.TreeDataProvider<TreeNode>, vsc
         const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? '';
         const files = diffState.files;
 
-        const added = files.filter(f => f.status === 'added')
+        const added = files.filter(f => f.status === 'added').map(f => new DiffFileItem(f, branch, workspaceRoot));
+        const modified = files
+            .filter(f => f.status === 'modified' || f.status === 'renamed')
             .map(f => new DiffFileItem(f, branch, workspaceRoot));
-        const modified = files.filter(f => f.status === 'modified' || f.status === 'renamed')
-            .map(f => new DiffFileItem(f, branch, workspaceRoot));
-        const deleted = files.filter(f => f.status === 'deleted')
-            .map(f => new DiffFileItem(f, branch, workspaceRoot));
+        const deleted = files.filter(f => f.status === 'deleted').map(f => new DiffFileItem(f, branch, workspaceRoot));
 
         const sections: SectionItem[] = [];
         if (modified.length > 0) {

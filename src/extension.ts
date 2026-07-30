@@ -86,9 +86,7 @@ function scheduleRefresh(editor: vscode.TextEditor): void {
 async function selectBranch(): Promise<void> {
     const [branches, currentBranch] = await Promise.all([getBranches(), getCurrentBranch()]);
 
-    const items = branches
-        .filter(b => b !== currentBranch)
-        .map(b => ({ label: b }));
+    const items = branches.filter(b => b !== currentBranch).map(b => ({ label: b }));
 
     if (items.length === 0) {
         vscode.window.showInformationMessage('No other branches found.');

@@ -40,7 +40,10 @@
     "git decorations",
     "scm"
   ],
-  "categories": ["SCM Providers", "Other"],
+  "categories": [
+    "SCM Providers",
+    "Other"
+  ],
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -120,22 +123,38 @@
       {
         "id": "diffMark.modifiedForeground",
         "description": "Color for files modified vs the compared branch",
-        "defaults": { "dark": "#4FC1FF", "light": "#0070C1", "highContrast": "#4FC1FF" }
+        "defaults": {
+          "dark": "#4FC1FF",
+          "light": "#0070C1",
+          "highContrast": "#4FC1FF"
+        }
       },
       {
         "id": "diffMark.addedForeground",
         "description": "Color for files added vs the compared branch",
-        "defaults": { "dark": "#C586C0", "light": "#8B008B", "highContrast": "#C586C0" }
+        "defaults": {
+          "dark": "#C586C0",
+          "light": "#8B008B",
+          "highContrast": "#C586C0"
+        }
       },
       {
         "id": "diffMark.deletedForeground",
         "description": "Color for files deleted vs the compared branch",
-        "defaults": { "dark": "#F48771", "light": "#B83232", "highContrast": "#F48771" }
+        "defaults": {
+          "dark": "#F48771",
+          "light": "#B83232",
+          "highContrast": "#F48771"
+        }
       },
       {
         "id": "diffMark.renamedForeground",
         "description": "Color for files renamed vs the compared branch",
-        "defaults": { "dark": "#73C991", "light": "#1E7E34", "highContrast": "#73C991" }
+        "defaults": {
+          "dark": "#73C991",
+          "light": "#1E7E34",
+          "highContrast": "#73C991"
+        }
       }
     ],
     "configuration": {

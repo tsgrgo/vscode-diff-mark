@@ -57,9 +57,7 @@ export async function applyDecorations(editor: vscode.TextEditor, branch: string
     const modifiedRanges: vscode.DecorationOptions[] = [];
     const deletedRanges: vscode.DecorationOptions[] = [];
 
-    const hoverMessage = new vscode.MarkdownString(
-        `[Show diff against ${branch}](command:diffMark.showDiff)`
-    );
+    const hoverMessage = new vscode.MarkdownString(`[Show diff against ${branch}](command:diffMark.showDiff)`);
     hoverMessage.isTrusted = true;
 
     for (const hunk of hunks) {

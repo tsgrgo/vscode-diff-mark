@@ -6,12 +6,10 @@ import * as path from 'path';
 export class DiffFileItem extends vscode.TreeItem {
     constructor(
         readonly file: ChangedFile,
-        private readonly branch: string,
-        readonly workspaceRoot: string
+        branch: string
     ) {
         super(path.basename(file.relativePath), vscode.TreeItemCollapsibleState.None);
 
-        this.description = path.dirname(file.relativePath) === '.' ? '' : path.dirname(file.relativePath);
         this.tooltip = file.relativePath;
         this.contextValue = 'diffFile';
 
@@ -36,19 +34,68 @@ export class DiffFileItem extends vscode.TreeItem {
     }
 }
 
+class FolderItem extends vscode.TreeItem {
+    constructor(
+        label: string,
+        public readonly children: (FolderItem | DiffFileItem)[]
+    ) {
+        super(label, vscode.TreeItemCollapsibleState.Expanded);
+        this.contextValue = 'folder';
+    }
+}
+
 class SectionItem extends vscode.TreeItem {
     constructor(
         label: string,
-        public readonly children: DiffFileItem[]
+        public readonly children: (FolderItem | DiffFileItem)[],
+        count: number
     ) {
         super(label, vscode.TreeItemCollapsibleState.Expanded);
         this.contextValue = 'section';
-        const count = children.length;
         this.description = `${count} file${count !== 1 ? 's' : ''}`;
     }
 }
 
-type TreeNode = SectionItem | DiffFileItem;
+type TreeNode = SectionItem | FolderItem | DiffFileItem;
+
+interface FolderTree {
+    folders: Map<string, FolderTree>;
+    files: ChangedFile[];
+}
+
+function buildFileTree(files: ChangedFile[], branch: string, workspaceRoot: string): (FolderItem | DiffFileItem)[] {
+    const root: FolderTree = { folders: new Map(), files: [] };
+
+    for (const file of files) {
+        const folders = path.dirname(path.relative(workspaceRoot, file.absolutePath)).split(path.sep);
+        let current = root;
+
+        for (const folder of folders) {
+            if (folder === '.') {
+                continue;
+            }
+            let child = current.folders.get(folder);
+            if (!child) {
+                child = { folders: new Map(), files: [] };
+                current.folders.set(folder, child);
+            }
+            current = child;
+        }
+
+        current.files.push(file);
+    }
+
+    const createItems = (tree: FolderTree): (FolderItem | DiffFileItem)[] => [
+        ...[...tree.folders.entries()]
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([name, child]) => new FolderItem(name, createItems(child))),
+        ...tree.files
+            .sort((a, b) => path.basename(a.relativePath).localeCompare(path.basename(b.relativePath)))
+            .map(file => new DiffFileItem(file, branch))
+    ];
+
+    return createItems(root);
+}
 
 export class DiffPanelProvider implements vscode.TreeDataProvider<TreeNode>, vscode.Disposable {
     private readonly _onDidChangeTreeData = new vscode.EventEmitter<TreeNode | undefined | void>();
@@ -67,7 +114,7 @@ export class DiffPanelProvider implements vscode.TreeDataProvider<TreeNode>, vsc
     }
 
     getChildren(element?: TreeNode): TreeNode[] {
-        if (element instanceof SectionItem) {
+        if (element instanceof SectionItem || element instanceof FolderItem) {
             return element.children;
         }
 
@@ -79,21 +126,19 @@ export class DiffPanelProvider implements vscode.TreeDataProvider<TreeNode>, vsc
         const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? '';
         const files = diffState.files;
 
-        const added = files.filter(f => f.status === 'added').map(f => new DiffFileItem(f, branch, workspaceRoot));
-        const modified = files
-            .filter(f => f.status === 'modified' || f.status === 'renamed')
-            .map(f => new DiffFileItem(f, branch, workspaceRoot));
-        const deleted = files.filter(f => f.status === 'deleted').map(f => new DiffFileItem(f, branch, workspaceRoot));
+        const added = files.filter(f => f.status === 'added');
+        const modified = files.filter(f => f.status === 'modified' || f.status === 'renamed');
+        const deleted = files.filter(f => f.status === 'deleted');
 
         const sections: SectionItem[] = [];
         if (modified.length > 0) {
-            sections.push(new SectionItem('Modified', modified));
+            sections.push(new SectionItem('Modified', buildFileTree(modified, branch, workspaceRoot), modified.length));
         }
         if (added.length > 0) {
-            sections.push(new SectionItem('Added', added));
+            sections.push(new SectionItem('Added', buildFileTree(added, branch, workspaceRoot), added.length));
         }
         if (deleted.length > 0) {
-            sections.push(new SectionItem('Deleted', deleted));
+            sections.push(new SectionItem('Deleted', buildFileTree(deleted, branch, workspaceRoot), deleted.length));
         }
 
         return sections;

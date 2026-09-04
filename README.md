@@ -21,7 +21,7 @@ Uncommitted HEAD changes always take visual priority — branch-diff highlights 
 Hover over any highlighted line for a clickable **Show diff** link, or run `Diff Mark: Show Diff for Current File` from the Command Palette.
 
 ### Side panel
-The **Diff Mark** Activity Bar view lists every changed file, grouped by status:
+The **Diff Mark** Activity Bar view lists changed files in their folder structure, grouped by status:
 
 - **Modified** — files changed between the branch and working tree
 - **Added** — files new in the working tree (not present on the branch)

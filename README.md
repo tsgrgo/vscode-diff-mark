@@ -75,6 +75,14 @@ All four Explorer decoration colors can be customized in your `settings.json`:
 - Git must be installed and available on `PATH`
 - The workspace must be a git repository
 
+## Building
+
+Package the extension with:
+
+```sh
+npx @vscode/vsce package
+```
+
 ## Known limitations
 
 - Only the first workspace folder is used in multi-root workspaces.

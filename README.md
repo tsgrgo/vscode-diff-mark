@@ -55,6 +55,7 @@ Files in the Explorer are decorated with distinct badges and colors that differ 
 | `diffMark.addedColor` | `rgba(40,160,40,0.6)` | Gutter color for added lines |
 | `diffMark.modifiedColor` | `rgba(30,140,200,0.6)` | Gutter color for modified lines |
 | `diffMark.deletedColor` | `rgba(200,50,50,0.6)` | Gutter color for deleted lines |
+| `diffMark.fileClickBehavior` | `diff` | Open a diff or the file itself when clicking a changed file |
 
 ## Theme color overrides
 

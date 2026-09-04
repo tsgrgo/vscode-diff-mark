@@ -98,6 +98,14 @@
       {
         "command": "diffMark.openFileDiff",
         "title": "Show Diff"
+      },
+      {
+        "command": "diffMark.openFileOnClick",
+        "title": "Diff Mark: Open Files on Click"
+      },
+      {
+        "command": "diffMark.openDiffOnClick",
+        "title": "Diff Mark: Open Diffs on Click"
       }
     ],
     "menus": {
@@ -116,6 +124,18 @@
           "command": "diffMark.stop",
           "when": "view == diffMarkPanel",
           "group": "navigation@3"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "diffMark.openFileOnClick",
+          "when": "view == diffMarkPanel && viewItem == diffFile",
+          "group": "diffMark@1"
+        },
+        {
+          "command": "diffMark.openDiffOnClick",
+          "when": "view == diffMarkPanel && viewItem == diffFile",
+          "group": "diffMark@2"
         }
       ]
     },
@@ -174,6 +194,15 @@
           "type": "string",
           "default": "rgba(200, 50, 50, 0.6)",
           "description": "Color for deleted lines gutter indicator"
+        },
+        "diffMark.fileClickBehavior": {
+          "type": "string",
+          "enum": [
+            "diff",
+            "file"
+          ],
+          "default": "diff",
+          "description": "Controls whether clicking a changed file in the Diff Mark panel opens its diff or the file itself."
         }
       }
     }

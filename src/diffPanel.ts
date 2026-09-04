@@ -27,8 +27,8 @@ export class DiffFileItem extends vscode.TreeItem {
 
         if (file.status !== 'deleted') {
             this.command = {
-                command: 'diffMark.openFileDiff',
-                title: 'Show Diff',
+                command: 'diffMark.openChangedFile',
+                title: 'Open Changed File',
                 arguments: [file, branch]
             };
             this.resourceUri = vscode.Uri.file(file.absolutePath);
@@ -138,4 +138,14 @@ export async function openFileDiff(file: ChangedFile, branch: string): Promise<v
     );
 
     setTimeout(() => registration.dispose(), 5000);
+}
+
+export async function openChangedFile(file: ChangedFile, branch: string): Promise<void> {
+    const behavior = vscode.workspace.getConfiguration('diffMark').get<'diff' | 'file'>('fileClickBehavior', 'diff');
+    if (behavior === 'file') {
+        await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(file.absolutePath));
+        return;
+    }
+
+    await openFileDiff(file, branch);
 }

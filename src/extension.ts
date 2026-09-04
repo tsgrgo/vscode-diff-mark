@@ -3,7 +3,7 @@ import * as path from 'path';
 import { getBranches, getCurrentBranch, getChangedFiles, getFileContentAtBranch } from './git';
 import { applyDecorations, clearDecorations, createDecorationTypes, disposeDecorationTypes } from './decorations';
 import { diffState } from './state';
-import { DiffPanelProvider, openFileDiff } from './diffPanel';
+import { DiffPanelProvider, openChangedFile, openFileDiff } from './diffPanel';
 import { BranchDiffFileDecorator } from './fileDecorator';
 
 let statusBarItem: vscode.StatusBarItem;
@@ -30,7 +30,10 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('diffMark.selectBranch', selectBranch),
         vscode.commands.registerCommand('diffMark.stop', stopHighlighting),
         vscode.commands.registerCommand('diffMark.showDiff', showDiffForCurrentFile),
+        vscode.commands.registerCommand('diffMark.openChangedFile', openChangedFile),
         vscode.commands.registerCommand('diffMark.openFileDiff', openFileDiff),
+        vscode.commands.registerCommand('diffMark.openFileOnClick', () => setFileClickBehavior('file')),
+        vscode.commands.registerCommand('diffMark.openDiffOnClick', () => setFileClickBehavior('diff')),
         vscode.commands.registerCommand('diffMark.refresh', refreshAll)
     );
 
@@ -69,6 +72,12 @@ export function activate(context: vscode.ExtensionContext) {
             }
         }
     });
+}
+
+async function setFileClickBehavior(behavior: 'diff' | 'file'): Promise<void> {
+    await vscode.workspace
+        .getConfiguration('diffMark')
+        .update('fileClickBehavior', behavior, vscode.ConfigurationTarget.Global);
 }
 
 function scheduleRefresh(editor: vscode.TextEditor): void {

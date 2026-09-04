@@ -138,12 +138,18 @@ function parseDiffOutput(diffOutput: string): DiffHunk[] {
 
 export async function getChangedFiles(branch: string): Promise<ChangedFile[]> {
     const cwd = await getRepositoryRoot();
-    if (!cwd) {
+    const workspaceRoot = getWorkspaceRoot();
+    if (!cwd || !workspaceRoot) {
+        return [];
+    }
+
+    const workspacePath = getRepositoryRelativePath(cwd, workspaceRoot);
+    if (workspacePath === undefined) {
         return [];
     }
 
     try {
-        const { stdout } = await execFileAsync('git', ['diff', '--name-status', branch], {
+        const { stdout } = await execFileAsync('git', ['diff', '--name-status', branch, '--', workspacePath || '.'], {
             cwd,
             maxBuffer: 10 * 1024 * 1024
         });
